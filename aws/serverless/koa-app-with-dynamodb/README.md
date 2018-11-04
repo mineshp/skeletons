@@ -19,3 +19,17 @@ sls logs -f <app-function-name>
 
 ### Optionally tail the logs with -t
 ```sls logs -f hello -t``` 
+
+## Endpoints
+
+### Set the Base Domain
+
+```export BASE_DOMAIN=<domain-setup-by-serverless>/dev```
+
+### POST /users
+
+```curl -H "Content-Type: application/json" -X POST ${BASE_DOMAIN}/users -d '{"userId": "testUser1", "name": "Test User"}'```
+
+### GET /users/:userId
+
+```curl -H "Content-Type: application/json" -X GET ${BASE_DOMAIN}/users/testUser1```
