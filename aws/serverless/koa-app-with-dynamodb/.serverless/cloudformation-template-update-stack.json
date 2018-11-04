@@ -66,6 +66,25 @@
                       "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/koa-app-with-dynamodb-dev-app:*:*"
                     }
                   ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:Query",
+                    "dynamodb:Scan",
+                    "dynamodb:GetItem",
+                    "dynamodb:PutItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:DeleteItem"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::GetAtt": [
+                        "UsersDynamoDBTable",
+                        "Arn"
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -92,7 +111,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/koa-app-with-dynamodb/dev/1541334861932-2018-11-04T12:34:21.932Z/koa-app-with-dynamodb.zip"
+          "S3Key": "serverless/koa-app-with-dynamodb/dev/1541372977413-2018-11-04T23:09:37.413Z/koa-app-with-dynamodb.zip"
         },
         "FunctionName": "koa-app-with-dynamodb-dev-app",
         "Handler": "index.handler",
@@ -104,21 +123,26 @@
           ]
         },
         "Runtime": "nodejs8.10",
-        "Timeout": 6
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "USERS_TABLE": "users-table-dev"
+          }
+        }
       },
       "DependsOn": [
         "AppLogGroup",
         "IamRoleLambdaExecution"
       ]
     },
-    "AppLambdaVersionGt0nTqw7eZyvVk8Pp2GMVLnAg7hdWrcfmzdfgl2OPI": {
+    "AppLambdaVersionFtcyZO3P3BNR0jcm25rTKgDNSXlgzUiaEG9jk4We0C8": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "NjHyRQCD6rcTGmqRaD5+9O7SBWAQZbXwAV2Kvduv9TE="
+        "CodeSha256": "38lF+XUIPwD4ZxXmVD7wsVszSCFzTWySsf8ngbUOzYM="
       }
     },
     "ApiGatewayRestApi": {
@@ -228,7 +252,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1541334861949": {
+    "ApiGatewayDeployment1541372977430": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -273,6 +297,28 @@
           ]
         }
       }
+    },
+    "UsersDynamoDBTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "userId",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "userId",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        },
+        "TableName": "users-table-dev"
+      }
     }
   },
   "Outputs": {
@@ -284,7 +330,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionGt0nTqw7eZyvVk8Pp2GMVLnAg7hdWrcfmzdfgl2OPI"
+        "Ref": "AppLambdaVersionFtcyZO3P3BNR0jcm25rTKgDNSXlgzUiaEG9jk4We0C8"
       }
     },
     "ServiceEndpoint": {

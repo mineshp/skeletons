@@ -10,6 +10,30 @@
       "variableSyntax": "\\${([ ~:a-zA-Z0-9._'\",\\-\\/\\(\\)]+?)}",
       "name": "aws",
       "runtime": "nodejs8.10",
+      "iamRoleStatements": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:UpdateItem",
+            "dynamodb:DeleteItem"
+          ],
+          "Resource": [
+            {
+              "Fn::GetAtt": [
+                "UsersDynamoDBTable",
+                "Arn"
+              ]
+            }
+          ]
+        }
+      ],
+      "environment": {
+        "USERS_TABLE": "users-table-dev"
+      },
       "versionFunctions": true,
       "remoteFunctionData": null,
       "compiledCloudFormationTemplate": {
@@ -80,6 +104,9 @@
                             "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/koa-app-with-dynamodb-dev-app:*:*"
                           }
                         ]
+                      },
+                      {
+                        "$ref": "$[\"service\"][\"provider\"][\"iamRoleStatements\"][0]"
                       }
                     ]
                   }
@@ -106,7 +133,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/koa-app-with-dynamodb/dev/1541334861932-2018-11-04T12:34:21.932Z/koa-app-with-dynamodb.zip"
+                "S3Key": "serverless/koa-app-with-dynamodb/dev/1541372977413-2018-11-04T23:09:37.413Z/koa-app-with-dynamodb.zip"
               },
               "FunctionName": "koa-app-with-dynamodb-dev-app",
               "Handler": "index.handler",
@@ -118,21 +145,26 @@
                 ]
               },
               "Runtime": "nodejs8.10",
-              "Timeout": 6
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "USERS_TABLE": "users-table-dev"
+                }
+              }
             },
             "DependsOn": [
               "AppLogGroup",
               "IamRoleLambdaExecution"
             ]
           },
-          "AppLambdaVersionGt0nTqw7eZyvVk8Pp2GMVLnAg7hdWrcfmzdfgl2OPI": {
+          "AppLambdaVersionFtcyZO3P3BNR0jcm25rTKgDNSXlgzUiaEG9jk4We0C8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "NjHyRQCD6rcTGmqRaD5+9O7SBWAQZbXwAV2Kvduv9TE="
+              "CodeSha256": "38lF+XUIPwD4ZxXmVD7wsVszSCFzTWySsf8ngbUOzYM="
             }
           },
           "ApiGatewayRestApi": {
@@ -242,7 +274,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1541334861949": {
+          "ApiGatewayDeployment1541372977430": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -287,6 +319,28 @@
                 ]
               }
             }
+          },
+          "UsersDynamoDBTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "userId",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "userId",
+                  "KeyType": "HASH"
+                }
+              ],
+              "ProvisionedThroughput": {
+                "ReadCapacityUnits": 1,
+                "WriteCapacityUnits": 1
+              },
+              "TableName": "users-table-dev"
+            }
           }
         },
         "Outputs": {
@@ -298,7 +352,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionGt0nTqw7eZyvVk8Pp2GMVLnAg7hdWrcfmzdfgl2OPI"
+              "Ref": "AppLambdaVersionFtcyZO3P3BNR0jcm25rTKgDNSXlgzUiaEG9jk4We0C8"
             }
           },
           "ServiceEndpoint": {
@@ -336,6 +390,9 @@
       },
       "vpc": {}
     },
+    "custom": {
+      "tableName": "users-table-dev"
+    },
     "functions": {
       "app": {
         "handler": "index.handler",
@@ -352,10 +409,37 @@
         "vpc": {}
       }
     },
+    "resources": {
+      "Resources": {
+        "UsersDynamoDBTable": {
+          "Type": "AWS::DynamoDB::Table",
+          "Properties": {
+            "AttributeDefinitions": [
+              {
+                "AttributeName": "userId",
+                "AttributeType": "S"
+              }
+            ],
+            "KeySchema": [
+              {
+                "AttributeName": "userId",
+                "KeyType": "HASH"
+              }
+            ],
+            "ProvisionedThroughput": {
+              "ReadCapacityUnits": 1,
+              "WriteCapacityUnits": 1
+            },
+            "TableName": "users-table-dev"
+          }
+        }
+      },
+      "Outputs": {}
+    },
     "artifact": "/Users/minesh/dev/PERSONAL/skeletons/aws/serverless/koa-app-with-dynamodb/.serverless/koa-app-with-dynamodb.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/koa-app-with-dynamodb/dev/1541334861932-2018-11-04T12:34:21.932Z",
+    "artifactDirectoryName": "serverless/koa-app-with-dynamodb/dev/1541372977413-2018-11-04T23:09:37.413Z",
     "artifact": "koa-app-with-dynamodb.zip"
   }
 }

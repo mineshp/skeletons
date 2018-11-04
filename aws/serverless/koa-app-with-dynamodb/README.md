@@ -2,6 +2,8 @@
 
 ## Deploy Application to AWS
 
+```sls deploy```
+
 ## Invoke
 
 ### Locally
