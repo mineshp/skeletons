@@ -2,7 +2,7 @@ service: koa-app-with-dynamodb
 
 custom:
   tableName: 'users-table-${self:provider.stage}'
-  whitelist: 'http://localhost:3000'
+  whitelist: 'http://localhost:3000,http://test-app-md.s3-website-eu-west-1.amazonaws.com'
 
 provider:
   name: aws
