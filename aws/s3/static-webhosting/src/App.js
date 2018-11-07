@@ -1,20 +1,15 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React from 'react';
+import MainNav from './Presentational/Shared/MainNav';
+import MainContainer from './Presentational/Shared/MainContainer';
+import Notification from './Container/Shared/Notification';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Welcome to mineshdesigns test react app.
-          </p>
-        </header>
-      </div>
-    );
-  }
-}
+const App = () => (
+  <div className="App main-container">
+    <Notification props />
+    <MainNav />
+    <MainContainer />
+  </div>
+);
 
 export default App;
